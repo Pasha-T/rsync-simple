@@ -1,14 +1,15 @@
 
-# Backup Script for Linux Systems
+
+# rsync-simple.sh
 
 ## Overview
 
-This script automates the backup of directories on Linux systems. It supports both full and incremental backups, manages retention of backups, logs all activities, and can send the logs to a Telegram chat.
+`rsync-simple.sh` is a Bash script for automating backups on Linux systems. It supports both full and incremental backups, manages backup retention, logs activities, and can send logs to a Telegram chat.
 
 ## Usage
 
 ```bash
-./backup_script.sh <source> <destination> <prefix> [<max_backups>]
+./rsync-simple.sh <source> <destination> <prefix> [<max_backups>]
 ```
 
 ### Arguments
@@ -16,31 +17,31 @@ This script automates the backup of directories on Linux systems. It supports bo
 - **`<source>`**: The directory to back up.
 - **`<destination>`**: The directory where the backups will be stored.
 - **`<prefix>`**: A prefix for the backup folder names, used to distinguish different backup sets.
-- **`[<max_backups>]`**: Optional. The maximum number of incremental backups to keep. Defaults to 7.
+- **`[<max_backups>]`**: (Optional) The maximum number of incremental backups to keep. Defaults to 7.
 
 ### Example
 
 ```bash
-./backup_script.sh /path/to/source /path/to/destination my_backup_prefix 5
+./rsync-simple.sh /path/to/source /path/to/destination my_backup_prefix 5
 ```
 
-This command will back up the `/path/to/source` directory to `/path/to/destination` with the prefix `my_backup_prefix` and retain up to 5 incremental backups.
+This command backs up the `/path/to/source` directory to `/path/to/destination` with the prefix `my_backup_prefix` and retains up to 5 incremental backups.
 
 ## Configuration
 
 ### Backup Retention
 
-- **`FULL_BACKUPS_RETENTION`**: The maximum number of full backups to retain (default: 2).
-- **`MAX_BACKUPS`**: The maximum number of incremental backups to retain (default: 7).
+- **`FULL_BACKUPS_RETENTION`**: Maximum number of full backups to retain (default: 2).
+- **`MAX_BACKUPS`**: Maximum number of incremental backups to retain (default: 7).
 - The script ensures that the number of backups does not fall below `MIN_BACKUPS` (set to 2).
 
 ### Rsync Parameters
 
-- **`BASE_RSYNC_PARAMETERS`**: Customize this to add or remove `rsync` options. The default includes options like `-aAXhvP --delete`.
+- **`BASE_RSYNC_PARAMETERS`**: Customize the `rsync` options. Defaults include `-aAXhvP --delete`.
 
 ### Exclude Patterns
 
-- **`EXCLUDES`**: An array of patterns to exclude from the backup. Customize this array to exclude specific directories or files.
+- **`EXCLUDES`**: Array of patterns to exclude from the backup. Modify this array to exclude specific directories or files.
 
 ### Telegram Notifications
 
@@ -53,7 +54,7 @@ This command will back up the `/path/to/source` directory to `/path/to/destinati
 The backup mode (full or incremental) is determined by the day of the week:
 
 - By default, a full backup is performed on day 6 (Saturday), and incremental backups are performed on other days.
-- You can change the case values in the `set_mode()` function to customize which days perform which backups.
+- Customize the `set_mode()` function to change the days for full and incremental backups.
 
 ### 2. Finding the Latest Backup
 
@@ -69,7 +70,7 @@ The `manage_backups()` function deletes old backups if they exceed the specified
 
 ### 5. Logging and Notifications
 
-- The script logs all activities to a temporary file (`$TEMP_OUTPUT`). At the end of the process, the log is saved and optionally sent to a Telegram chat.
+- The script logs activities to a temporary file (`$TEMP_OUTPUT`). At the end of the process, the log is saved and optionally sent to a Telegram chat.
   
 ### 6. Cleanup
 
@@ -77,7 +78,7 @@ Temporary files are deleted at the end of the script execution.
 
 ## Customization
 
-- **Backup Days**: Adjust the `set_mode()` function to change which days of the week perform full backups.
+- **Backup Days**: Adjust the `set_mode()` function to change the days for full and incremental backups.
 - **Rsync Options**: Modify `BASE_RSYNC_PARAMETERS` and `EXCLUDES` to fit your backup needs.
 - **Retention Settings**: Adjust `FULL_BACKUPS_RETENTION` and `MAX_BACKUPS` to manage how many backups you want to keep.
 
@@ -90,11 +91,27 @@ The script checks if the `rsync` command fails and deletes any incomplete backup
 1. **Make the script executable**:
 
     ```bash
-    chmod +x backup_script.sh
+    chmod +x rsync-simple.sh
     ```
 
 2. **Run the script with the required arguments**:
 
     ```bash
-    ./backup_script.sh /path/to/source /path/to/destination my_backup_prefix 5
+    ./rsync-simple.sh /path/to/source /path/to/destination my_backup_prefix 5
     ```
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+
+---
+
+### GNU General Public License v3.0
+
+This script is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This script is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this script. If not, see [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
+
+---
